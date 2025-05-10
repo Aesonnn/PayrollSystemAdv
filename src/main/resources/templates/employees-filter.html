@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" class="dark">
+<head>
+    <title>Filter Employees</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script> 
+</head>
+<body class="bg-gray-900 text-gray-200 min-h-screen" style="background-color: #191e24;">
+    <header th:insert="~{blocks/header :: header}"></header>
+    
+    <div class="container mx-auto mt-8 px-4">
+        <h1 class="text-2xl font-bold mb-4">Filter employees</h1>
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+            <form action="/employees/filter" method="post">
+                <div class="mb-3 sm:mb-0 sm:mr-4 rounded-lg bg-gray-800 shadow-sm px-4 py-3 flex items-center">
+                    <label for="filterBy" class="form-label text-white mr-1" style="width: 120px;">Filter By:</label>
+                    <select class="form-select bg-gray-800 text-white border-gray-700 focus:ring-indigo-500 focus:border-indigo-500 w-full" 
+                            id="filterBy" name="filterBy">
+                        <option value="firstName">First Name</option>
+                        <option value="lastName">Last Name</option>
+                        <option value="employeeId">Employee ID</option> 
+                        <option value="departmentId">Department ID</option>
+                        <option value="positionId">Position ID</option> 
+                        <option value="numPay">> Number of payrolls</option> 
+                    </select>
+                    <div class="px-2 flex items-center">
+                        <label for="keyword">Keyword:</label>
+                        <div class="ml-2">
+                            <input type="text" class="form-control rounded-lg text-black" id="keyword" name="keyword" style="text-align: center;">
+                        </div>
+                    </div>
+                        <button type="submit" class="btn btn-primary text-white font-bold bg-yellow-500 rounded-lg ml-4 px-4 py-2">Filter</button>
+                </div>
+                <div class="error-message" th:if="${keywordError}" th:text="${keywordError}" style="color: rgb(255, 102, 0);"></div> 
+            </form>
+            
+
+            <!-- <div class="bg-violet-500 rounded-lg px-4 py-3">
+                <a class="btn btn-secondary text-white" href="/employees/add">Add New Employee</a>
+            </div> -->
+        </div>
+        <div class="table-container shadow-lg rounded-lg overflow-hidden border border-gray-700">
+            <table class="table table-striped table-bordered table-dark w-full border-collapse">
+                <thead class="bg-gray-800 border-b border-gray-700">
+                    <tr>
+                        <th th:text="ID" class="px-4 py-2 text-center"></th> 
+                        <th class="px-4 py-2 text-center">Department title</th>
+                        <th class="px-4 py-2 text-center">Position title</th>
+                        <th class="px-4 py-2 text-center">Name</th>
+                        <th class="px-4 py-2 text-center">Payrolls received</th>
+                        <th th:text="Actions" class="px-4 py-2 text-center"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="emp : ${filteredEmployees}" class="border-b border-gray-700 hover:bg-gray-800">
+                        <td th:text="${emp.id}" class="px-4 py-2 text-center"></td>
+                        <td style="word-break: break-word; white-space: normal;" class="px-4 py-2 text-center"> 
+                            <div class="overflow-x-auto mx-auto" style="max-width: 130px;">
+                                <span th:text="${#strings.isEmpty(emp.department) ? 'Not Assigned' : emp.department.id + ', ' + emp.department.title}"></span>
+                            </div> 
+                        </td>
+                        <td style="word-break: break-word; white-space: normal;" class="px-4 py-2 text-center"> 
+                            <div class="overflow-x-auto mx-auto" style="max-width: 130px;">
+                                <span th:text="${#strings.isEmpty(emp.position) ? 'Not Assigned' : emp.position.id + ', ' + emp.position.title}"></span>
+                            </div> 
+                        </td>
+                        <td style="word-break: break-word; white-space: normal;" class="px-4 py-2 text-center"> 
+                            <div class="overflow-x-auto mx-auto" style="max-width: 130px;">
+                                <span th:text="${emp.firstName + ' ' + emp.lastName}"></span>
+                            </div> 
+                        </td>
+                        <td th:text="${emp.payrolls.size()}" class="px-4 py-2 text-center"></td>
+                        <td class="px-4 py-2 text-center">
+                                <a th:href="'/employees/' + ${emp.id}" class="bg-violet-500 hover:bg-violet-600 text-white font-medium py-2 px-4 rounded-md mb-2">Details</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${filteredEmployees == null or filteredEmployees.empty}">
+            No Employees Found
+        </div>
+    </div>
+
+</body>
+</html>
+
+

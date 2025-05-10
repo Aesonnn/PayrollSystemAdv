@@ -1,0 +1,107 @@
+<div th:fragment="header">
+  <style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+  
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #4a4a4a;
+        width: 90px;
+        z-index: 1;
+    }
+  
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+  
+    .dropdown-content a {
+        color: white;
+        padding:  8px 10px;
+        text-decoration: none;
+        display: block;
+    }
+  
+    .dropdown-content a:hover {
+        background-color: #333;
+    }
+
+    /* Removing sticky header styles */
+  </style>
+  
+  <!-- Removed sticky-header class -->
+  <div class="py-4 shadow-md" style="background-color: #0f161e;"> 
+    <div class="container mx-auto flex items-center justify-center">
+        <nav class="space-x-8">
+          <!-- Admin sees Dashboard, regular users see Payrolls -->
+          <th:block th:if="${session.loggedInUser != null && session.loggedInUser.hasRole('ADMIN')}">
+            <a href="/" class="text-white hover:text-blue-400">Dashboard</a>
+          </th:block>
+          <th:block th:if="${session.loggedInUser != null && !session.loggedInUser.hasRole('ADMIN')}">
+            <th:block th:if="${session.loggedInUser.employee != null}">
+              <a th:href="'/payrolls/filter-' + ${session.loggedInUser.employee.id}" class="text-white hover:text-blue-400">Payrolls</a>
+            </th:block>
+            <th:block th:if="${session.loggedInUser.employee == null}">
+              <span class="text-yellow-300 px-2 py-1 rounded">You have no access yet. Ask your administrator to finish setting up your account</span>
+            </th:block>
+          </th:block>
+          
+          <!-- Only visible for ADMIN users -->
+          <th:block th:if="${session.loggedInUser != null && session.loggedInUser.hasRole('ADMIN')}">
+            <div class="dropdown">
+              <a href="/payrolls" class="text-white hover:text-blue-400">Payrolls</a>
+              <div class="dropdown-content">
+                <a href="/payrolls/add" class="text-white hover:text-blue-400">Add</a>
+                <a href="/payrolls/filter" class="text-white hover:text-blue-400">Filter</a>
+              </div>
+            </div>
+            <div class="dropdown">
+              <a href="/employees" class="text-white hover:text-blue-400">Employees</a>
+              <div class="dropdown-content">
+                <a href="/employees/add" class="text-white hover:text-blue-400">Add</a>
+                <a href="/employees/filter" class="text-white hover:text-blue-400">Filter</a>
+              </div>
+            </div>
+            <div class="dropdown">
+              <a href="/taxes" class="text-white hover:text-blue-400">Taxes</a>
+              <div class="dropdown-content">
+                <a href="/taxes/add" class="text-white hover:text-blue-400">Add</a>
+              </div>
+            </div>
+            <div class="dropdown">
+              <a href="/departments" class="text-white hover:text-blue-400">Departments</a>
+              <div class="dropdown-content">
+                <a href="/departments/add" class="text-white hover:text-blue-400">Add</a>
+              </div>
+            </div>
+            <div class="dropdown">
+              <a href="/positions" class="text-white hover:text-blue-400">Positions</a>
+              <div class="dropdown-content">
+                <a href="/positions/add" class="text-white hover:text-blue-400">Add</a>
+                <a href="/positions/filter" class="text-white hover:text-blue-400">Filter</a>
+              </div>
+            </div>
+            <div class="dropdown">
+              <a href="/payrolls/summary" class="text-white hover:text-blue-400">Summary</a>
+              <div class="dropdown-content">
+                <a href="/payrolls/summary" class="text-white hover:text-blue-400">Payrolls</a>
+                <a href="/positions/summary" class="text-white hover:text-blue-400">Positions</a>
+              </div>
+            </div>
+            <div class="dropdown">
+              <a href="/users" class="text-white hover:text-blue-400">Users</a>
+              <div class="dropdown-content">
+                <a href="/register" class="text-white hover:text-blue-400">Add</a>
+              </div>
+            </div>
+            <a href="/about" class="text-white hover:text-blue-400">Help</a>
+          </th:block>
+          
+          <!-- Always visible for all authenticated users -->
+          <a href="/logout" class="text-white hover:text-blue-400">Logout</a>
+        </nav>
+      </div>
+    </div>
+</div>

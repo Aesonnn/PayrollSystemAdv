@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" class="dark">
+<head>
+    <title>Edit Position</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/webjars/jquery/3.6.3/jquery.min.js"></script>
+</head> 
+<body class="bg-gray-900 text-gray-200 min-h-screen" style="background-color: #191e24;"> 
+  <header th:insert="~{blocks/header :: header}"></header>
+  <div class="bg-gray-900 text-gray-200 h-screen flex items-center justify-center" style="background-color: #191e24;">
+    <div class="w-full max-w-lg bg-gray-800 rounded-lg shadow-md p-8"  th:each="pos : ${position}"> 
+        <h2 class="text-2xl font-bold text-gray-100 mb-6">Edit Position</h2>
+
+        <form class="flex flex-col" method="post" onsubmit="return validateForm()">
+            <div class="error-message" th:if="${titleError}" th:text="${titleError}"></div> 
+            <input
+                type="text"
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Title *"
+                th:value="${pos.title}"
+                name="title"
+            />
+            <div class="error-message" th:if="${nameError}" th:text="${nameError}" style="color: rgb(255, 102, 0);"></div> 
+            <input
+                type="text" 
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Description"
+                th:value="${pos.description}"
+                name="description"
+            />
+            <input
+                type="number"
+                step="0.01"
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Minimum salary"
+                th:value="${pos.salaryMin}"
+                name="salaryMin"
+            />
+            <input
+                type="number"
+                step="0.01"
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Maximum salary"
+                th:value="${pos.salaryMax}"
+                name="salaryMax"
+            />
+            <button
+                type="submit"
+                class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
+            >
+                Save
+            </button>
+        </form>
+    </div>
+  </div>
+</body>
+</html>
+<script>
+    function validateForm() {
+        var title = document.forms[0].title.value;
+        var description = document.forms[0].description.value;
+        var salaryMin = document.forms[0].salaryMin.value;
+        var salaryMax = document.forms[0].salaryMax.value;
+        
+        if (title === "" || salaryMin === "" || salaryMax === "") {
+            alert("Title and description are required");
+            return false;
+        }
+
+        if (salaryMin < 0.1 || salaryMax < 0.1) {
+            alert("Minimum and maximum salary should not be less than 0");
+            return false;
+        }
+
+        if (title.length > 150 || description.length > 150) {
+            alert("Title and description should not exceed 150 characters");
+            return false;
+        }
+    }
+</script>
+
+</body>
+</html>

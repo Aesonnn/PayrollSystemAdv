@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;  
+        }
+        .bg-clrm { 
+            background-color: #bf22e2; 
+        }
+
+        .bg-clrpayr { 
+            background-color: #f88956; 
+        } 
+
+        .bg-clrtax {
+            background-color: #10a89b;
+        }
+
+        .grid-cols-2 > div { 
+            margin-bottom: 20px;
+        } 
+
+        .table-container {
+            background-color: #212529;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 min-h-screen" style="background-color: #191e24;">
+    <header th:insert="~{blocks/header :: header}"></header>
+
+    <div class="container mx-auto p-6"> <h1 class="text-2xl font-semibold mb-4">Payroll Dashboard</h1>
+
+        <div class="grid grid-cols-2 gap-6"> 
+
+            <div class="bg-clrm rounded-lg p-4"> 
+                <div class="flex justify-between items-center">
+                    <a href="/employees" class="text-xl font-medium mb-2">Employees</a>
+                    <a href="/employees/add" class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-md mb-2">
+                        Add New Employee
+                    </a>
+                </div>
+                <div class="table-container shadow-lg rounded-lg overflow-x-auto">  
+
+                    <table class="table table-striped table-bordered table-dark w-full">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-2 text-center">Name</th>
+                                <th class="px-4 py-2 text-center">Position</th>
+                                <th th:text="Actions" class="px-4 py-2 text-center"></th>
+                            </tr>
+                        </thead>
+            
+                        <tbody>
+                            <tr th:each="emp : ${employees}">
+                                <td style="word-break: break-word; white-space: normal;" class="px-4 py-2 text-center"> 
+                                    <div class="overflow-x-auto mx-auto" style="max-width: 130px;">
+                                        <span th:text="${emp.firstName + ' ' + emp.lastName}"></span>
+                                    </div> 
+                                </td>
+                                <td style="word-break: break-word; white-space: normal;" class="px-4 py-2 text-center"> 
+                                    <div class="overflow-x-auto mx-auto" style="max-width: 200px;">
+                                        <span th:text="${emp.position?.title} ?: 'Not Assigned'"></span>
+                                    </div> 
+                                </td>
+                                <td class="px-4 py-2 text-center">
+                                    
+                                        <a th:href="'/employees/' + ${emp.id}" class="bg-violet-500 hover:bg-violet-600 text-white font-medium py-2 px-4 rounded-md mb-2">Details</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-clrpayr rounded-lg p-4"> 
+                <div class="flex justify-between items-center">
+                    <a href="/payrolls" class="text-xl font-medium mb-2">Payrolls</a>
+                    <a href="/payrolls/add" class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-md mb-2">
+                        Add New Payroll
+                    </a>
+                </div>
+                <div class="table-container shadow-lg rounded-lg overflow-x-auto"> 
+                <table class="table table-striped table-bordered table-dark w-full">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2 text-center">Employee</th>
+                            <th class="px-4 py-2 text-center">Gross pay</th>
+                            <th class="px-4 py-2 text-center">Net pay</th>
+                            <th th:text="Actions" class="px-4 py-2 text-center"></th>
+                        </tr>
+                    </thead>
+        
+                    <tbody>
+                        <tr th:each="pr : ${payrolls}">
+                            <td style="word-break: break-word; white-space: normal;" class="px-4 py-2 text-center"> 
+                                <div class="overflow-x-auto mx-auto" style="max-width: 130px;" >
+                                    <span th:text="${pr.employee?.firstName} ?: 'Not Assigned'"></span>
+                                </div> 
+                            </td>
+                            <!-- <td th:text="${pr.employee?.firstName} ?: 'Not Assigned'" class="px-4 py-2 text-center"></td> -->
+                            <td th:text="${pr.grossPay}" class="px-4 py-2 text-center"></td> 
+                            <td th:text="${pr.netPay}" class="px-4 py-2 text-center"></td> 
+                            <td class="px-4 py-2 text-center">
+                                
+                                    <a th:href="'/payroll/' + ${pr.id}" class="bg-violet-500 hover:bg-violet-600 text-white font-medium py-2 px-4 rounded-md mb-2">Details</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div> 
+
+        <div class="bg-clrtax rounded-lg p-4"> 
+            <div class="flex justify-between items-center">
+                <a href="/taxes" class="text-xl font-medium mb-2">Taxes</a>
+                <a href="/taxes/add" class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-md mb-2">
+                    Add New Tax
+                </a>
+            </div>
+            <div class="table-container shadow-lg rounded-lg overflow-x-auto mt-6"> 
+                <table class="table table-striped table-bordered table-dark w-full">
+                    <thead>
+                        <tr>
+                            <th th:text="ID" class="px-4 py-2 text-center"></th> 
+                            <th class="px-4 py-2 text-center">Percent</th>
+                            <th class="px-4 py-2 text-center">Name</th>
+                            <th class="px-4 py-2 text-center">Description</th>
+                            <th th:text="Actions" class="px-4 py-2 text-center"></th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <tr th:each="tax : ${taxes}">
+                            <td th:text="${tax.id}" class="px-4 py-2 text-center"></td>
+                            <td th:text="${tax.percentRate}" class="px-4 py-2 text-center"></td> 
+                            <td th:text="${tax.taxName}" class="px-4 py-2 text-center"></td> 
+                            <td style="word-break: break-word; white-space: normal;" class="px-4 py-2 text-center"> 
+                                <div class="overflow-x-auto mx-auto" style="max-width: 200px;">
+                                    <span th:text="${tax.description}"></span>
+                                </div> 
+                            </td>
+                            <td class="px-4 py-2 text-center">
+                            
+                                <a th:href="'/tax/' + ${tax.id}" class="bg-violet-500 hover:bg-violet-600 text-white font-medium py-2 px-4 rounded-md mb-2">Details</a>
+                        </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
+

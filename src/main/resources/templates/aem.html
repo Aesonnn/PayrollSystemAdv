@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" class="dark">
+<head>
+    <title>Employees</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-200 min-h-screen" style="background-color: #191e24;">
+    <header th:insert="~{blocks/header :: header}"></header>
+
+    <div class="container mx-auto mt-8 px-4">
+        <h1 class="text-2xl font-bold mb-4">Employees List</h1>
+
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+            <form th:action="@{/employees}" method="get">
+                <div class="mb-3 sm:mb-0 sm:mr-4">
+                    <label for="sortField" class="form-label text-gray-400">Sort by:</label>
+                    <select class="form-select bg-gray-800 text-gray-300 border-gray-700 focus:ring-indigo-500 focus:border-indigo-500" 
+                            id="sortField" name="sortField">
+                        <option value="id">ID</option>
+                        <option value="departmentNumber">Department Number</option>
+                        <option value="firstName">First Name</option>
+                        <option value="payr">Payrolles received</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Sort</button>
+            </form>
+
+            <a class="btn btn-secondary" href="/employees/add">Add New Employee</a>
+        </div>
+
+        <div class="table-container shadow-lg rounded-lg overflow-x-auto">
+            <table class="table table-striped table-bordered table-dark w-full">
+                <thead>
+                    <tr>
+                        <th th:text="ID" class="px-4 py-2"></th> 
+                        <th class="px-4 py-2">Department Number</th>
+                        <th class="px-4 py-2">First Name</th>
+                        <th th:text="Actions" class="px-4 py-2"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="emp : ${employees}">
+                        <td th:text="${emp.id}" class="px-4 py-2"></td>
+                        <td th:text="${emp.department?.title} ?: 'Not Assigned'" class="px-4 py-2"></td> 
+                        <td th:text="${emp.firstName}" class="px-4 py-2"></td>
+                        <td class="px-4 py-2">
+                            <a th:href="'/employees/' + ${emp.id}" class="bg-violet-500 hover:bg-violet-600 text-white font-medium py-2 px-4 rounded-md mb-2">Details</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

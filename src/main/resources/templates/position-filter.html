@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" class="dark">
+<head>
+    <title>Filter Positions</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script> 
+</head>
+<body class="bg-gray-900 text-gray-200 min-h-screen" style="background-color: #191e24;">
+    <header th:insert="~{blocks/header :: header}"></header>
+    
+    <div class="container mx-auto mt-8 px-4">
+        <h1 class="text-2xl font-bold mb-4">Filter positions</h1>
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+            <form action="/positions/filter" method="post">
+                <div class="mb-3 sm:mb-0 sm:mr-4 rounded-lg bg-gray-800 shadow-sm px-4 py-3 flex items-center">
+                    <label for="filterBy" class="form-label text-white mr-1" style="width: 120px;">Filter By:</label>
+                    <select class="form-select bg-gray-800 text-white border-gray-700 focus:ring-indigo-500 focus:border-indigo-500 w-full" 
+                            id="filterBy" name="filterBy">
+                            <option value="title">Title</option>
+                            <option value="Salary">Salary</option>
+                            <option value="numEmp"> > Number of employees</option>
+                    </select>
+                    <div class="px-2 flex items-center">
+                        <label for="filterValue">Value:</label>
+                        <div class="ml-2">
+                            <input type="text" class="form-control rounded-lg text-black" id="filterValue" name="filterValue" style="text-align: center;">
+                        </div>
+                    </div>
+                        <button type="submit" class="btn btn-primary text-white font-bold bg-yellow-500 rounded-lg ml-4 px-4 py-2">Filter</button>
+                </div>
+                <div class="error-message" th:if="${keywordError}" th:text="${keywordError}" style="color: rgb(255, 102, 0);"></div> 
+            </form>
+            
+
+            <!-- <div class="bg-violet-500 rounded-lg px-4 py-3">
+                <a class="btn btn-secondary text-white" href="/employees/add">Add New Employee</a>
+            </div> -->
+        </div>
+        <div class="table-container shadow-lg rounded-lg overflow-hidden border border-gray-700">
+            <table class="table table-striped table-bordered table-dark w-full border-collapse">
+                <thead class="bg-gray-800 border-b border-gray-700">
+                    <tr>
+                        <th th:text="ID" class="px-4 py-2 text-center"></th> 
+                        <th class="px-4 py-2 text-center">Title</th>
+                        <th class="px-4 py-2 text-center">Min salary</th>
+                        <th class="px-4 py-2 text-center">Max salary</th>
+                        <th class="px-4 py-2 text-center">Number of employees</th>
+                        <th th:text="Actions" class="px-4 py-2 text-center"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="pos : ${filteredPositions}" class="border-b border-gray-700 hover:bg-gray-800">
+                        <td th:text="${pos.id}" class="px-4 py-2 text-center"></td>
+                        <td style="word-break: break-word; white-space: normal;" class="px-4 py-2 text-center"> 
+                            <div class="overflow-x-auto mx-auto" style="max-width: 130px;">
+                                <span th:text="${pos.title}"></span>
+                            </div> 
+                        </td>
+                        <td th:text="${pos.salaryMin}" class="px-4 py-2 text-center"></td> 
+                        <td th:text="${pos.salaryMax}" class="px-4 py-2 text-center"></td> 
+                        <td th:text="${pos.employees.size()}" class="px-4 py-2 text-center"></td>
+                        <td class="px-4 py-2 text-center">
+                            
+                                <a th:href="'/positions/' + ${pos.id}" class="bg-violet-500 hover:bg-violet-600 text-white font-medium py-2 px-4 rounded-md mb-2">Details</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div th:if="${filteredPositions == null or filteredPositions.empty}">
+            No Positions Found
+        </div>
+    </div>
+
+</body>
+</html>

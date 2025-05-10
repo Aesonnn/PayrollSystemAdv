@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Employees</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900" style="background-color: #191e24;">
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-xl font-bold text-gray-900 dark:text-white">Available Employees</h1>
+                <button onclick="window.close()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+            
+            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                Click on an employee ID to select it for user registration.
+            </p>
+            
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white dark:bg-gray-800">
+                    <thead>
+                        <tr class="bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-left text-sm uppercase">
+                            <th class="py-3 px-4 font-semibold">ID</th>
+                            <th class="py-3 px-4 font-semibold">Name</th>
+                            <th class="py-3 px-4 font-semibold">Department</th>
+                            <th class="py-3 px-4 font-semibold">Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${employees.empty}" class="border-b border-gray-200 dark:border-gray-700">
+                            <td colspan="5" class="py-4 px-4 text-center text-gray-500 dark:text-gray-400">No available employees found</td>
+                        </tr>
+                        <tr th:each="employee : ${employees}" class="border-b border-gray-200 dark:border-gray-700">
+                            <td class="py-3 px-4 text-gray-800 dark:text-gray-200" th:text="${employee.id}"></td>
+                            <td class="py-3 px-4 text-gray-800 dark:text-gray-200" th:text="${employee.firstName + ' ' + employee.lastName}"></td>
+                            <td class="py-3 px-4 text-gray-800 dark:text-gray-200" th:text="${employee.department != null ? employee.department.title : '-'}"></td>
+                            <td class="py-3 px-4 text-gray-800 dark:text-gray-200" th:text="${employee.position != null ? employee.position.title : '-'}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

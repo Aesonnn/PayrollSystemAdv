@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" class="dark">
+<head>
+    <title>Payroll Details</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script> 
+</head>
+<body class="bg-gray-900 text-gray-200 min-h-screen" style="background-color: #191e24;">
+
+<header th:insert="~{blocks/header :: header}"></header>
+
+<div class="container mx-auto mt-8 px-4">
+  <div class="bg-gray-800 rounded-lg shadow-lg p-6 w-1/2 mx-auto border-2 border-blue-400" style="word-wrap: break-word;"> <div th:each="pr : ${payrolls}">
+      <h2 class="text-2xl font-semibold mb-3" th:text="'Payroll ID: ' + ${pr.id}"></h2>
+      <h3 class="text-xl mb-2" th:text="'Comments: ' + ${pr.comments}"></h3>
+      
+      <!-- Employee info with conditional link -->
+      <p class="mb-4" th:if="${pr.employee != null}">
+        <span th:if="${isAdmin}">
+          <a th:href="'/employees/' + ${pr.employee.id}">
+            <span th:text="'Employee: ' + ${pr.employee.firstName + ' ' + pr.employee.lastName}"></span>
+          </a>
+        </span>
+        <span th:unless="${isAdmin}" th:text="'Employee: ' + ${pr.employee.firstName + ' ' + pr.employee.lastName}"></span>
+      </p>
+      <p class="mb-4" th:unless="${pr.employee != null}"><span th:text="'Employee: Deleted Employee'"></span></p>
+      
+      <p class="mb-4" th:text="'Gross pay: ' + ${pr.grossPay}"></p>
+      <p class="mb-4" th:text="'Net pay: ' + ${pr.netPay}"></p>
+      <p class="mb-2">Issue date: <span th:text="${#dates.format(pr.issueDate, 'dd-MM-yyyy')}"></span></p>
+      
+      <!-- Taxes section -->
+      <div class="mt-4 mb-4">
+        <h4 class="text-lg font-semibold text-red-400">Taxes (Deductions):</h4>
+        <ul class="ml-4 mt-2">
+            <li th:each="tax : ${taxes}" class="mb-1">
+                <!-- Tax info with conditional link -->
+                <span th:if="${isAdmin}">
+                  <a th:href="'/tax/' + ${tax.id}" class="hover:text-blue-300">
+                    <span th:text="'ID: ' + ${tax.id}"></span>
+                    <span th:text="'Percent rate: ' + ${tax.percentRate} + '%' "></span>
+                    <span th:text="${tax.description}"></span>
+                  </a>
+                </span>
+                <span th:unless="${isAdmin}">
+                  <span th:text="'ID: ' + ${tax.id}"></span>
+                  <span th:text="'Percent rate: ' + ${tax.percentRate} + '%' "></span>
+                  <span th:text="${tax.description}"></span>
+                </span>
+            </li>
+            <li th:if="${#lists.isEmpty(taxes)}" class="text-gray-400 italic">No taxes applied</li>
+        </ul>
+      </div>
+      
+      <!-- Bonuses section -->
+      <div class="mt-4 mb-4">
+        <h4 class="text-lg font-semibold text-green-400">Bonuses (Benefits):</h4>
+        <ul class="ml-4 mt-2">
+            <li th:each="bonus : ${bonuses}" class="mb-1">
+                <!-- Bonus info with conditional link -->
+                <span th:if="${isAdmin}">
+                    <span th:text="'ID: ' + ${bonus.id}"></span>
+                    <span th:text="'Name: ' + ${bonus.bonusName}"></span>
+                    <span th:text="'Percent rate: ' + ${bonus.percentRate} + '%' "></span>
+                    <span th:text="${bonus.description}"></span>
+                </span>
+                <span th:unless="${isAdmin}">
+                  <span th:text="'Name: ' + ${bonus.bonusName}"></span>
+                  <span th:text="'Percent rate: ' + ${bonus.percentRate} + '%' "></span>
+                  <span th:text="${bonus.description}"></span>
+                </span>
+            </li>
+            <li th:if="${#lists.isEmpty(bonuses)}" class="text-gray-400 italic">No bonuses applied</li>
+        </ul>
+      </div>
+
+      <!-- Only show edit/delete buttons for admin users -->
+      <div class="mt-4" th:if="${isAdmin}">
+        <a th:if="${pr.employee != null}" th:href="'/payroll/' + ${pr.id} + '/edit'" class="btn btn-primary text-white bg-yellow-500 hover:bg-yellow-600 rounded-lg px-6 py-2 inline-block mr-3">Edit</a> 
+        <form th:action="'/payroll/' + ${pr.id} + '/delete'" method="post" class="inline">
+            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md mb-2">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

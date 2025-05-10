@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Add Font Awesome for the icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header th:insert="~{blocks/header :: header}"></header>
+    <section class="bg-gray-50 dark:bg-gray-900" style="background-color: #191e24;">
+        <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+            <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                        Create a new user
+                    </h1>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">All fields are required.</p>
+                    <form class="space-y-4 md:space-y-6" action="/register" method="post">
+                        <div>
+                            <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
+                            <input type="username" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            required>
+                        </div>
+                        <div>
+                            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                            <input type="password" name="password" id="password"class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            required>
+                        </div>
+                        <div>
+                            <label for="firstName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
+                            <input type="firstName" name="firstName" id="firstName"class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            required>
+                        </div>
+                        <div>
+                            <label for="lastName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
+                            <input type="lastName" name="lastName" id="lastName"class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            required>
+                        </div>
+                        <div>
+                            <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
+                            <select name="role" id="role" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                <option value="">Select Role</option>
+                                <option value="ADMIN">Admin</option>
+                                <option value="USER">User</option>
+                            </select>
+                        </div>
+                        <div id="employeeIdContainer" style="display: none;">
+                            <label for="employeeId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Employee ID
+                                <a href="/available-employees" target="_blank" class="ml-2 text-blue-600 hover:text-blue-800" title="View available employees">
+                                    <i class="fas fa-external-link-alt text-sm"></i>
+                                </a>
+                            </label>
+                            <div class="relative">
+                                <input type="number" name="employeeId" id="employeeId" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            </div>
+                        </div>
+                        <div class="error-message" th:if="${error}" th:text="${error}" style="color: rgb(255, 102, 0);"></div> 
+                        <button type="submit" 
+                        class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" 
+                        style="background-color: #b554ed;">Create</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+      </section>
+</body>
+</html>
+
+
+<script>
+    document.querySelector('form').addEventListener('submit', function(event) {
+        var inputs = document.querySelectorAll('input');
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].value.length > 50) {
+                alert('Input fields cannot exceed 50 characters');
+                event.preventDefault();
+                return;
+            }
+        }
+        
+        // Validate employeeId is provided if USER role is selected
+        var roleSelect = document.getElementById('role');
+        var employeeIdField = document.getElementById('employeeId');
+        
+        if (roleSelect.value === 'USER') {
+            if (!employeeIdField.value) {
+                alert('Employee ID is required for User role');
+                event.preventDefault();
+                return;
+            }
+        }
+    });
+    
+    // Show/hide employee ID based on role selection
+    document.getElementById('role').addEventListener('change', function() {
+        var employeeIdContainer = document.getElementById('employeeIdContainer');
+        var employeeIdField = document.getElementById('employeeId');
+        
+        if (this.value === 'USER') {
+            employeeIdContainer.style.display = 'block';
+            employeeIdField.setAttribute('required', 'required');
+        } else {
+            employeeIdContainer.style.display = 'none';
+            employeeIdField.removeAttribute('required');
+            employeeIdField.value = '';
+        }
+    });
+</script>

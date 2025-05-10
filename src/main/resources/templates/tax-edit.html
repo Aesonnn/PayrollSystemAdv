@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" class="dark">
+<head>
+    <title>Add Tax</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/webjars/jquery/3.6.3/jquery.min.js"></script>
+</head> 
+<body class="bg-gray-900 text-gray-200 min-h-screen" style="background-color: #191e24;"> 
+  <header th:insert="~{blocks/header :: header}"></header>
+  <div class="bg-gray-900 text-gray-200 h-screen flex items-center justify-center">
+    <div class="w-full max-w-lg bg-gray-800 rounded-lg shadow-md p-8"> 
+        <h2 class="text-2xl font-bold text-gray-100 mb-6">Add Tax</h2>
+
+        <form class="flex flex-col" method="post">
+            <div class="error-message" th:if="${percentRateError}" th:text="${percentRateError}"></div> 
+            <input
+                type="number"
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Percent rate *"
+                th:value="${tax.percentRate}"
+                name="percentRate"
+            />
+            <div class="error-message" th:if="${taxNameError}" th:text="${taxNameError}"></div> 
+            <input
+                type="text" 
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Tax name *"
+                th:value="${tax.taxName}"
+                name="taxName"
+            />
+            <input
+                type="text"
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Description"
+                th:value="${tax.description}"
+                name="description"
+            />
+            <button
+                type="submit"
+                class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
+            >
+                Save
+            </button>
+        </form>
+    </div>
+  </div>
+</body>
+</html>
+<script>
+    const form = document.querySelector('form');
+    const percentRateInput = document.querySelector('input[name="percentRate"]');
+    const taxNameInput = document.querySelector('input[name="taxName"]');
+    const descriptionInput = document.querySelector('input[name="description"]');
+
+    form.addEventListener('submit', function(event) {
+        if (percentRateInput.value === '') {
+            alert('Percent rate is required');
+            event.preventDefault(); // Prevent form submission if percent rate is empty
+        } else {
+            const percentRate = parseFloat(percentRateInput.value);
+            if (percentRate <= 0 || percentRate >= 100) {
+                alert('Percent rate must be between 0 and 100');
+                event.preventDefault(); // Prevent form submission if percent rate is invalid
+            }
+        }
+
+        if (taxNameInput.value.length > 150) {
+            alert('Tax name must not exceed 150 characters');
+            event.preventDefault(); // Prevent form submission if tax name is too long
+        }
+
+        if (descriptionInput.value.length > 150) {
+            alert('Description must not exceed 150 characters');
+            event.preventDefault(); // Prevent form submission if description is too long
+        }
+    });
+</script>
+
+
+</body>
+</html>

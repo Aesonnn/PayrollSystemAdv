@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" class="dark">
+<head>
+    <title>Add Payroll</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/webjars/jquery/3.6.3/jquery.min.js"></script>
+</head> 
+<body class="bg-gray-900 text-gray-200 min-h-screen"> 
+  <header th:insert="~{blocks/header :: header}"></header>
+  <div class="bg-gray-900 text-gray-200 h-screen flex items-center justify-center">
+    <div class="w-full max-w-lg bg-gray-800 rounded-lg shadow-md p-8"> 
+        <h2 class="text-2xl font-bold text-gray-100 mb-6">Add Payroll</h2>
+
+        <form class="flex flex-col" action="/payrolls/add" method="post" onsubmit="return validateForm()">
+            <input
+                type="text"
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Comments"
+                name="comments"
+            />
+            <div class="error-message" th:if="${employeeError}" th:text="${employeeError}"></div>
+            <input
+                type="number" 
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Employee ID *"
+                name="employeeId"
+                required
+            />
+
+            <div class="mt-4">
+                <label for="taxes" class="text-gray-100 block mb-2">Select Taxes:</label>
+                <div id="taxes" class="bg-gray-700 text-gray-200 rounded-md p-4" style="word-wrap: break-word;"> 
+                  <div class="grid grid-cols-2 gap-4"> </div>
+                </div>
+              </div>                
+
+            <div>
+                <label for="grossPay">Gross Pay:</label>
+                <input type="number" step="0.01" 
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                id="grossPay" name="grossPay" required>
+            </div>
+
+            <div>
+                <label for="netPay">Net Pay:</label>
+                <div id="netPay"></div> 
+            </div>
+    
+
+            <button
+                type="submit"
+                class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
+            >
+                Add Payroll
+            </button>
+        </form>
+    </div>
+  </div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const taxes = /*[[${taxes}]]*/ [];
+    const taxesContainer = document.getElementById('taxes');
+
+    taxes.forEach(tax => {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.name = 'taxIds';
+        checkbox.value = tax.id;
+        checkbox.id = 'tax_' + tax.id; 
+        checkbox.classList.add('appearance-none', 'rounded', 'h-4', 'w-4', 'border', 'border-gray-300', 'bg-gray-700', 'checked:bg-blue-500', 'checked:border-transparent', 'mr-2');
+
+        const label = document.createElement('label');
+        label.htmlFor = 'tax_' + tax.id; 
+        label.appendChild(document.createTextNode(`${tax.taxName} (${tax.percentRate}%)`)); 
+
+        const div = document.createElement('div');
+        div.appendChild(checkbox);
+        div.appendChild(label);
+
+        taxesContainer.appendChild(div);
+        taxesContainer.appendChild(document.createElement('br'));
+    }); 
+
+    const grossPayInput = document.getElementById('grossPay');
+    const netPayDisplay = document.getElementById('netPay');
+
+    function calculateNetPay() {
+        let netPay = parseFloat(grossPayInput.value) || 0;
+
+        taxes.forEach(tax => {
+            const checkbox = document.getElementById('tax_' + tax.id);
+            if (checkbox.checked) {
+                netPay -= netPay * tax.percentRate / 100;
+            }
+        });
+
+        netPayDisplay.textContent = netPay.toFixed(2);
+    }
+
+    grossPayInput.addEventListener('input', calculateNetPay);
+    taxes.forEach(tax => {
+        document.getElementById('tax_' + tax.id).addEventListener('change', calculateNetPay);
+    });
+
+    function validateForm() {
+        var comments = document.forms[0]["comments"].value;
+        var employeeId = document.forms[0]["employeeId"].value;
+        var grossPay = document.forms[0]["grossPay"].value;
+
+        if (comments.length > 150 || employeeId.length > 150) {
+            alert("Text fields values must not be longer than 150 characters.");
+            return false;
+        }
+
+        if (grossPay < 0) {
+            alert("Gross pay must not be less than zero.");
+            return false;
+        }
+
+        return true;
+    }
+    /*]]>*/
+</script>
+
+</body>
+</html>

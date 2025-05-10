@@ -1,0 +1,47 @@
+<!-- Unused in the current implimintation -->
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" class="dark">
+<head>
+    <title>Bonuses</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-200 min-h-screen" style="background-color: #191e24;">
+    <header th:insert="~{blocks/header :: header}"></header>
+    <main class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center">
+            <h1 class="text-3xl font-bold mb-6">Bonuses List</h1>
+            <a href="/bonuses/add" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4 inline-block">Add Bonus</a>
+        </div>
+        
+        <div class="bg-gray-800 shadow-md rounded-lg overflow-hidden">
+            <table class="min-w-full">
+                <thead>
+                    <tr class="bg-gray-700">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Percentage</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Description</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-600">
+                    <tr th:each="bonus : ${bonuses}" class="hover:bg-gray-700">
+                        <td class="px-6 py-4 whitespace-nowrap" th:text="${bonus.id}"></td>
+                        <td class="px-6 py-4 whitespace-nowrap" th:text="${bonus.bonusName}"></td>
+                        <td class="px-6 py-4 whitespace-nowrap" th:text="${bonus.percentRate} + '%'"></td>
+                        <td class="px-6 py-4" th:text="${bonus.description}"></td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex space-x-2">
+                                <a th:href="'/bonus/' + ${bonus.id}" class="text-blue-400 hover:text-blue-300">View</a>
+                                <a th:href="'/bonus/' + ${bonus.id} + '/edit'" class="text-yellow-400 hover:text-yellow-300">Edit</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <footer th:insert="~{blocks/footer :: footer}"></footer>
+</body>
+</html>

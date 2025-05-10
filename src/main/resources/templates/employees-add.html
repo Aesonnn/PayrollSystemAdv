@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" class="dark">
+<head>
+    <title>Add Employee</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/webjars/jquery/3.6.3/jquery.min.js"></script>
+</head> 
+<body class="bg-gray-900 text-gray-200 min-h-screen" style="background-color: #191e24;"> 
+  <header th:insert="~{blocks/header :: header}"></header>
+  <div class="bg-gray-900 text-gray-200 h-screen flex items-center justify-center" style="background-color: #191e24;">
+    <div class="w-full max-w-lg bg-gray-800 rounded-lg shadow-md p-8"> 
+        <h2 class="text-2xl font-bold text-gray-100 mb-6">Add Employee</h2>
+
+        <form class="flex flex-col" action="/employees/add" method="post">
+            <div class="error-message" th:if="${nameError}" th:text="${nameError}" style="color: rgb(255, 102, 0);"></div> 
+            <input
+                type="text"
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="First Name *"
+                name="fname"
+            />
+            <div class="error-message" th:if="${nameError}" th:text="${nameError}" style="color: rgb(255, 102, 0);"></div> 
+            <input
+                type="text" 
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Last Name *"
+                name="lname"
+            />
+            <input
+                type="date"
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Date of birth *"
+                name="dob"
+                id="dobInput"
+            />
+            <div class="error-message" th:if="${emailError}" th:text="${emailError}" style="color: rgb(255, 102, 0);"></div>
+            <input
+                type="email"
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Email *"
+                name="email"
+                required
+            />
+            <div class="error-message" th:if="${departmentError}" th:text="${departmentError}" style="color: rgb(255, 102, 0);"></div>
+             <input
+                type="number"
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Department ID"
+                name="depid"
+            />
+            <div class="error-message" th:if="${positionError}" th:text="${positionError}" style="color: rgb(255, 102, 0);"></div>
+            <input
+                type="numebr"
+                class="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition ease-in-out duration-150 w-full"
+                placeholder="Position ID"
+                name="posid"
+            />
+
+            <button
+                type="submit"
+                class="bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md mt-4 hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
+            >
+                Add Employee
+            </button>
+        </form>
+    </div>
+  </div>
+<script>
+  const form = document.querySelector('form'); // Assuming your form has a unique identifier
+  const nameInput = document.querySelector('input[name="fname"]');
+  const surnameInput = document.querySelector('input[name="lname"]');
+  const dateInput = document.querySelector('input[name="dob"]'); 
+  const emailInput = document.querySelector('input[name="email"]');
+
+
+  form.addEventListener('submit', function(event) {
+        // Date of birth validation
+    const selectedDate = new Date(dateInput.value);
+    const currentYear = new Date().getFullYear();
+
+    if (selectedDate.getFullYear() > currentYear) {
+      alert('Date of birth cannot be in the future.');
+      event.preventDefault();
+    }
+    
+    if (nameInput.value.length > 30) {
+      alert('Name cannot be longer than 30 characters.'); 
+      event.preventDefault(); // Prevent form submission if name is too long
+    }
+    if (surnameInput.value.length > 30) {
+      alert('Surname cannot be longer than 30 characters.'); 
+      event.preventDefault(); // Prevent form submission if surname is too long
+    }
+    if (dateInput.value === '') {
+      alert('Please select a date of birth.'); 
+      event.preventDefault(); // Prevent form submission if date is empty
+    }
+
+    if (emailInput.value.length > 30) {
+      alert('Email cannot be longer than 30 characters.'); 
+      event.preventDefault(); // Prevent form submission if email is too long
+    }
+
+  });
+
+</script>
+</body>
+</html>

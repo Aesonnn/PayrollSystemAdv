@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" class="dark">
+<head>
+    <title>User Details</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script> 
+</head>
+<body class="bg-gray-900 text-gray-200 min-h-screen" style="background-color: #191e24;">
+
+<header th:insert="~{blocks/header :: header}"></header>
+
+<div class="container mx-auto mt-8 px-4">
+  <div class="bg-gray-700 rounded-lg shadow-lg p-6 w-1/2 mx-auto" style="word-wrap: break-word;">
+    <div th:if="${user != null}">
+      <h2 class="text-2xl font-semibold mb-3" th:text="'User ID: ' + ${user.id}"></h2>
+      <h3 class="text-xl mb-2" th:text="'User name: ' + ${user.firstName + ' ' + user.lastName}"></h3>
+
+      <p class="mb-2">Username: <span th:text="${user.username}"></span></p>
+      <p class="mb-2">Roles: 
+        <span th:each="role, iterStat : ${user.roles}">
+          <span th:text="${role.name}"></span><span th:if="${!iterStat.last}">, </span>
+        </span>
+      </p>
+      <p class="mb-2">Associated Employee: 
+        <span th:if="${user.employee != null}">
+          <a th:href="'/employee/' + ${user.employee.id}" class="text-blue-400 hover:underline" 
+             th:text="${user.employee.firstName + ' ' + user.employee.lastName + ' (ID: ' + user.employee.id + ')'}"></a>
+        </span>
+        <span th:unless="${user.employee != null}">Not Assigned</span>
+      </p>
+
+      <div class="mt-4">
+        <a th:href="'/user/' + ${user.id} + '/edit'" class="btn btn-primary text-white bg-yellow-500 hover:bg-yellow-600 rounded-lg px-6 py-2 inline-block mr-3">Edit</a> 
+        <form th:action="'/user/' + ${user.id} + '/delete'" method="post" class="inline">
+            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md mb-2">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
